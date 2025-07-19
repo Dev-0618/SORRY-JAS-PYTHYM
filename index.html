@@ -1,62 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SORRY JASLIN</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-image: url('1.11S.jpg');
-      background-size:cover;
-      background-color: #f0f0f0;
-      display:flex;
-      justify-content: center;
-      align-items: left;
-      height: 50vh;
-      margin: 0;
-    }
- #video-background {
-    
-    position: fixed;
-    top: 0%;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    object-fit: cover;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I'm So Sorry, Jas!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Body Styling */
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            margin: 0;
+            overflow: hidden; /* Prevents scrollbars */
+            display: flex;
+            justify-content: center; /* Horizontally center content */
+            align-items: center;   /* Vertically center content */
+            min-height: 100vh;     /* Ensures body takes full viewport height */
+            background-color: #333; /* Fallback background color */
+            position: relative; /* For z-index context */
+        }
 
-    .animation-container {
-      text-align: center;
-      animation: fadeInOut 3s linear infinite;
-      background-image: url('MEJAS.jpg');
-      background-size: cover;
-      background-position: center;
-      padding-top: 200px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      color: #020202;
-    }
+        /* Video Background */
+        #video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2; /* Place behind all other content */
+            object-fit: cover; /* Ensures video covers the entire screen */
+            filter: brightness(0.9); /* Increased brightness: Video is more visible */
+        }
 
-    @keyframes fadeInOut {
-      0%, 100% {
-        opacity: 0;
-      }
-      50% {
-        opacity: 1;
-      }
-    }
-  </style>
+        /* Overlay for Readability */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Lighter overlay: Video shows through more */
+            background-color: rgba(0, 0, 0, 0.15); 
+            z-index: -1; /* Above video, below main content */
+        }
+
+        /* Main Apology Card Container */
+        .apology-card {
+            /* Slightly more opaque card: Ensures text readability */
+            background-color: rgba(255, 255, 255, 0.98); 
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); /* More pronounced shadow for depth */
+            text-align: center;
+            max-width: 500px; /* Max width for desktop */
+            width: 90%; /* Responsive width */
+            box-sizing: border-box; /* Include padding in width */
+            z-index: 1; /* Ensure it's above the video and overlay */
+            
+            /* Flexbox for stacking selfie and text vertically */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally within the card */
+
+            /* For positioning the close button relative to the card */
+            position: relative; 
+
+            /* Initial state for animation */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1.2s ease-out forwards; /* Apply animation */
+
+            /* For smooth dismissal transition */
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        /* Close Button Styling */
+        .close-button {
+            position: absolute;
+            top: 15px; /* Distance from the top of the card */
+            right: 15px; /* Distance from the right of the card */
+            background: none; /* No background fill */
+            border: none; /* No border */
+            font-size: 2em; /* Size of the 'X' */
+            color: #aaa; /* Light grey color */
+            cursor: pointer; /* Indicates it's clickable */
+            line-height: 1; /* Ensures 'X' is vertically centered */
+            padding: 0; /* Remove default button padding */
+            transition: color 0.3s ease; /* Smooth color transition on hover */
+            z-index: 10; /* Ensure it's on top of other card elements */
+        }
+
+        .close-button:hover {
+            color: #d9534f; /* Changes to the apology red on hover */
+        }
+
+        /* Selfie Image Styling */
+        .selfie-image {
+            width: 180px; /* Larger size for desktop */
+            height: 180px;
+            border-radius: 50%; /* Makes it circular */
+            overflow: hidden; /* Hides parts of the image outside the circle */
+            margin-bottom: 25px; /* Space below the image */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Soft shadow for the image */
+            border: 6px solid #f8f8f8; /* Light border around the image */
+        }
+
+        .selfie-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the image covers the circle without distortion */
+            display: block; /* Removes extra space below image */
+        }
+
+        /* Apology Text Styling */
+        .apology-text h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.8em; /* Adjusted size for the card */
+            color: #d9534f; /* A warm, empathetic red */
+            margin-top: 0;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+
+        .apology-text h2 {
+            font-size: 1.3em; /* Adjusted size for readability */
+            line-height: 1.6;
+            color: #555; /* Dark grey for body text */
+            margin-top: 0;
+            font-weight: 400; /* Standard weight for body text */
+        }
+
+        /* Keyframe Animation for the Card */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Responsive Design --- */
+
+        /* Tablets and smaller desktops */
+        @media (max-width: 768px) {
+            .apology-card {
+                padding: 30px;
+                max-width: 400px;
+            }
+            .close-button {
+                font-size: 1.8em;
+                top: 10px;
+                right: 10px;
+            }
+            .selfie-image {
+                width: 150px;
+                height: 150px;
+                margin-bottom: 20px;
+            }
+            .apology-text h1 {
+                font-size: 2.2em;
+            }
+            .apology-text h2 {
+                font-size: 1.1em;
+            }
+        }
+
+        /* Mobile devices */
+        @media (max-width: 480px) {
+            .apology-card {
+                padding: 25px 20px;
+                border-radius: 15px;
+            }
+            .selfie-image {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 15px;
+                border: 4px solid #f8f8f8;
+            }
+            .apology-text h1 {
+                font-size: 1.8em;
+                margin-bottom: 10px;
+            }
+            .apology-text h2 {
+                font-size: 0.95em;
+            }
+        }
+
+        /* Smaller mobile devices */
+        @media (max-width: 375px) {
+            .apology-card {
+                padding: 20px 15px;
+            }
+            .selfie-image {
+                width: 100px;
+                height: 100px;
+            }
+            .apology-text h1 {
+                font-size: 1.5em;
+            }
+            .apology-text h2 {
+                font-size: 0.9em;
+            }
+        }
+    </style>
 </head>
 <body>
- <video id="video-background" autoplay muted loop>
-    <source src="ME JAS.mp4" type="video/mp4">    
-  </video>
-  <div class="animation-container">
-    <h1>I'm extremely sorry, Jas!</h1>
-  </div>
-  
-  <h2> Im sorry for what Ive done, Im soo soo soooo sorry di, please forgive. uk ryt idk how to talk🥲🥲, I mean Im kinda dumb soo plss forgive me dii plsss🤧</h2>
+    <video id="video-background" autoplay muted loop playsinline>
+        <source src="ME JAS.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="overlay"></div>
+
+    <div class="apology-card">
+        <button class="close-button" onclick="dismissApology()">×</button>
+
+        <div class="selfie-image">
+            <img src="1.11S.jpg" alt="Jas and Me">
+        </div>
+
+        <div class="apology-text">
+            <h1>I'm extremely sorry, Jas!</h1>
+            <h2>I'm sorry for what I've done, I'm so, so, so sorry di, please forgive me. You know right, I don't know how to talk 🥲🥲. I mean, I'm kind of dumb, so please forgive me dii, please 🤧</h2>
+        </div>
+    </div>
+
+    <script>
+        function dismissApology() {
+            const apologyCard = document.querySelector('.apology-card');
+            if (apologyCard) {
+                // Apply fade-out and slide-down effect
+                apologyCard.style.opacity = '0';
+                apologyCard.style.transform = 'translateY(50px)'; // Moves it down as it fades
+                
+                // Optional: Remove the card from the DOM after the animation
+                // This makes the background video fully visible without the card element
+                setTimeout(() => {
+                    apologyCard.remove();
+                }, 600); // Duration matches the CSS transition time
+            }
+        }
+    </script>
 </body>
 </html>
